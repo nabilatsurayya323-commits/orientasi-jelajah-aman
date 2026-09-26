@@ -14,7 +14,7 @@ export default function TentangScreen() {
 
         <Text style={styles.text}>Versi: 1.0.0</Text>
 
-        <Text style={styles.text}>Pembuat: Nama Kamu</Text>
+        <Text style={styles.text}>Pembuat: Nabila Tsurayya Ahmad</Text>
       </View>
     </SafeAreaView>
   );

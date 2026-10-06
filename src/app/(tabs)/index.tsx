@@ -1,16 +1,12 @@
 // src/app/(tabs)/index.tsx
 import { useEffect, useRef, useState } from "react";
 import { mintaIzinLokasi, ambilKoordinatSaatIni } from "../../services/locationService";
-import {
-  ActivityIndicator,
-  Button,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ActivityIndicator, Button, Text, TouchableOpacity, View, } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { HasilGeocoding } from "../../../types/geocoding";
 import { DataCuacaLengkap, DataKualitasUdara } from "../../../types/weather";
+import { router } from "expo-router";
+
 import AtribusiCuaca from "../../components/AtribusiCuaca";
 import SearchBox from "../../components/SearchBox";
 import WeatherCard from "../../components/WeatherCard";
@@ -115,13 +111,28 @@ export default function HalamanUtama() {
       )}
 
       {cuaca && kualitasUdara && kotaTerpilih && !sedangMemuat && (
+        <>
         <WeatherCard
-          kota={kotaTerpilih.name}
-          suhu={cuaca.saatIni.suhu}
-          tingkatAQI={konversiTingkatAQI(kualitasUdara.indeksAQI)}
-          indeksAQI={kualitasUdara.indeksAQI}
+        kota={kotaTerpilih.name}
+        suhu={cuaca.saatIni.suhu}
+        tingkatAQI={konversiTingkatAQI(kualitasUdara.indeksAQI)}
         />
-      )}
+        <Button
+        title="Tambahkan ke Favorit"
+        onPress={() =>
+          router.push({
+            pathname: "/tambah-favorit",
+            params: {
+              id: String(kotaTerpilih.id),
+              nama: kotaTerpilih.name,
+              lat: String(kotaTerpilih.latitude),
+              lon: String(kotaTerpilih.longitude),
+            },
+          })
+          }
+          />
+          </>
+        )}
 
       {cuaca && (
         <Text>

@@ -1,7 +1,7 @@
 // src/app/(tabs)/index.tsx
 
-import { useEffect, useRef, useState } from "react";
 import { router } from "expo-router";
+import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Button,
@@ -11,12 +11,15 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { mintaIzinLokasi, ambilKoordinatSaatIni } from "../../services/locationService";
 import { ambilKualitasUdara } from "../../services/airQualityService";
 import { ambilSemuaFavorit } from "../../services/favoritStorage";
 import { cariKota } from "../../services/geocodingService";
-import { ambilCuaca } from "../../services/weatherService";
+import {
+  ambilKoordinatSaatIni,
+  mintaIzinLokasi,
+} from "../../services/locationService";
 import { konversiTingkatAQI } from "../../services/weatherAdapter";
+import { ambilCuaca } from "../../services/weatherService";
 
 import type { HasilGeocoding } from "../../../types/geocoding";
 import type {
@@ -33,12 +36,12 @@ import { useDebounce } from "../../hooks/use-debounce";
 export default function HalamanUtama() {
   const [teksCari, setTeksCari] = useState("");
   const [hasilPencarian, setHasilPencarian] = useState<HasilGeocoding[]>([]);
-  const [kotaTerpilih, setKotaTerpilih] =
-    useState<HasilGeocoding | null>(null);
+  const [kotaTerpilih, setKotaTerpilih] = useState<HasilGeocoding | null>(null);
 
   const [cuaca, setCuaca] = useState<DataCuacaLengkap | null>(null);
-  const [kualitasUdara, setKualitasUdara] =
-    useState<DataKualitasUdara | null>(null);
+  const [kualitasUdara, setKualitasUdara] = useState<DataKualitasUdara | null>(
+    null,
+  );
 
   const [sedangMemuat, setSedangMemuat] = useState(false);
   const [pesanError, setPesanError] = useState<string | null>(null);
@@ -67,9 +70,7 @@ export default function HalamanUtama() {
     // Cek apakah kota sudah ada di daftar favorit
     const daftarFavorit = await ambilSemuaFavorit();
 
-    setSudahFavorit(
-      daftarFavorit.some((favorit) => favorit.id === kota.id),
-    );
+    setSudahFavorit(daftarFavorit.some((favorit) => favorit.id === kota.id));
 
     const idSaatIni = ++requestIdRef.current;
 
@@ -89,9 +90,7 @@ export default function HalamanUtama() {
     } catch (err) {
       if (idSaatIni !== requestIdRef.current) return;
 
-      setPesanError(
-        "Gagal memuat data cuaca. Periksa koneksi internet Anda.",
-      );
+      setPesanError("Gagal memuat data cuaca. Periksa koneksi internet Anda.");
     } finally {
       if (idSaatIni === requestIdRef.current) {
         setSedangMemuat(false);
@@ -133,18 +132,12 @@ export default function HalamanUtama() {
     <SafeAreaView style={{ flex: 1, padding: 16, gap: 16 }}>
       <SearchBox onCari={setTeksCari} />
 
-      <Button
-        title="Gunakan Lokasi Saat Ini"
-        onPress={gunakanLokasiSaatIni}
-      />
+      <Button title="Gunakan Lokasi Saat Ini" onPress={gunakanLokasiSaatIni} />
 
       {pesanLokasi && <Text>{pesanLokasi}</Text>}
 
       {hasilPencarian.map((kota) => (
-        <TouchableOpacity
-          key={kota.id}
-          onPress={() => pilihKota(kota)}
-        >
+        <TouchableOpacity key={kota.id} onPress={() => pilihKota(kota)}>
           <Text>{kota.name}</Text>
         </TouchableOpacity>
       ))}
@@ -157,9 +150,7 @@ export default function HalamanUtama() {
 
           <Button
             title="Coba Lagi"
-            onPress={() =>
-              kotaTerpilih && pilihKota(kotaTerpilih)
-            }
+            onPress={() => kotaTerpilih && pilihKota(kotaTerpilih)}
           />
         </View>
       )}
@@ -169,17 +160,11 @@ export default function HalamanUtama() {
           <WeatherCard
             kota={kotaTerpilih.name}
             suhu={cuaca.saatIni.suhu}
-            tingkatAQI={konversiTingkatAQI(
-              kualitasUdara.indeksAQI,
-            )}
+            tingkatAQI={konversiTingkatAQI(kualitasUdara.indeksAQI)}
           />
 
           <Button
-            title={
-              sudahFavorit
-                ? "Sudah di Favorit"
-                : "Tambahkan ke Favorit"
-            }
+            title={sudahFavorit ? "Sudah di Favorit" : "Tambahkan ke Favorit"}
             disabled={sudahFavorit}
             onPress={() =>
               router.push({

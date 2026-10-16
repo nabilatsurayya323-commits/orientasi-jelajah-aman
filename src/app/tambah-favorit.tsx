@@ -1,3 +1,5 @@
+// src/app/tambah-favorit.tsx
+
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Alert, Button, Text, View } from "react-native";
@@ -15,8 +17,6 @@ export default function ModalTambahFavorit() {
   const [sedangMenyimpan, setSedangMenyimpan] = useState(false);
 
   async function simpan() {
-    if (sedangMenyimpan) return;
-
     try {
       setSedangMenyimpan(true);
 
@@ -27,8 +27,12 @@ export default function ModalTambahFavorit() {
         longitude: Number(lon),
       });
 
-      // Kembali ke halaman sebelumnya setelah penyimpanan berhasil.
-      router.replace("/(tabs)");
+      Alert.alert("Berhasil", `${nama} ditambahkan ke favorit`, [
+        {
+          text: "OK",
+          onPress: () => router.back(),
+        },
+      ]);
     } catch (error) {
       console.error("Gagal menyimpan favorit:", error);
 

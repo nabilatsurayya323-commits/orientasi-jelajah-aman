@@ -1,8 +1,6 @@
-// src/app/tambah-favorit.tsx
-
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { Alert, Button, Text, View } from "react-native";
+import { Alert, Button, Platform, Text, View } from "react-native";
 
 import { tambahFavorit } from "../services/favoritStorage";
 
@@ -17,6 +15,8 @@ export default function ModalTambahFavorit() {
   const [sedangMenyimpan, setSedangMenyimpan] = useState(false);
 
   async function simpan() {
+    if (sedangMenyimpan) return;
+
     try {
       setSedangMenyimpan(true);
 
@@ -27,23 +27,35 @@ export default function ModalTambahFavorit() {
         longitude: Number(lon),
       });
 
-      Alert.alert("Berhasil", `${nama} ditambahkan ke favorit`, [
-        {
-          text: "OK",
-          onPress: () => router.back(),
-        },
-      ]);
+      if (Platform.OS === "web") {
+        router.dismissAll();
+        router.replace("/");
+      } else {
+        Alert.alert("Berhasil", `${nama} ditambahkan ke favorit`, [
+          {
+            text: "OK",
+            onPress: () => {
+              router.dismissAll();
+              router.replace("/");
+            },
+          },
+        ]);
+      }
     } catch (error) {
       console.error("Gagal menyimpan favorit:", error);
 
-      Alert.alert("Gagal", "Kota tidak berhasil ditambahkan ke favorit.");
+      if (Platform.OS === "web") {
+        window.alert("Kota tidak berhasil ditambahkan ke favorit.");
+      } else {
+        Alert.alert("Gagal", "Kota tidak berhasil ditambahkan ke favorit.");
+      }
     } finally {
       setSedangMenyimpan(false);
     }
   }
 
   return (
-    <View style={{ padding: 16, gap: 16 }}>
+    <View style={{ flex: 1, padding: 16, gap: 16 }}>
       <Text>Tambahkan {nama} ke daftar favorit?</Text>
 
       <Button

@@ -7,7 +7,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "orientasijelajahaman",
     "userInterfaceStyle": "automatic",
-
+    
     "ios": {
       "icon": "./assets/expo.icon"
     },
@@ -42,7 +42,10 @@
         {
           "locationWhenInUsePermission": "Jelajah Aman menggunakan lokasi Anda untuk menampilkan cuaca di kota terdekat."
         }
-      ]
+      ],
+      "expo-sqlite",
+      "expo-image",
+      "expo-web-browser"
     ],
 
     "experiments": {

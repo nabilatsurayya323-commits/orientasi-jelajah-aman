@@ -62,3 +62,8 @@ Join our community of developers creating universal apps.
 ### Status Data Cuaca
 
 Cache-segar adalah data cuaca yang masih berada dalam batas waktu TTL sehingga dapat langsung digunakan tanpa mengambil data dari internet. Cache-basi adalah data yang sudah melewati batas TTL, tetapi masih bisa digunakan sebagai alternatif ketika internet tidak tersedia. First-run offline adalah kondisi ketika aplikasi pertama kali dibuka tanpa koneksi internet dan belum memiliki cache yang tersimpan, sehingga data cuaca tidak dapat ditampilkan. Label status data penting agar pengguna mengetahui apakah data yang ditampilkan masih segar, sudah lama, atau belum tersedia.
+
+Jika ada kesulitan saat menjalankan expo:
+ ```bash
+   npx expo serve --port 8081
+   ```
